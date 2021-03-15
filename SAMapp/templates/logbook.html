@@ -1,4 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>Logbook</h1>
+<!-- Section for displaying the general animal info like name, feeding info and residency status -->
+<div class="content-section">
+	<div class="media">
+		<div class="media-body">
+			<h2 class="account-heading">{{ current_animal.species }}</h2>
+
+
+
+		</div>
+	</div>
+</div>
+
+<!-- Section for showing the recent feedings -->
+<div class="content-section">
+<h2>Feedings</h2>	
+<table>
+	<thead>
+		<tr>
+			<th> User </th>
+			<th> Date & Time Completed </th>
+			<th> Extra Information </th>
+		</tr>
+		<tr>
+
+
+
+
+		</tr>
+	</thead>
+</table>
+</div>
 {% endblock content %}

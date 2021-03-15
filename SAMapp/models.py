@@ -1,7 +1,15 @@
 from datetime import datetime
-from SAMapp import db
+from SAMapp import db, login_manager
+from flask_login import UserMixin 
 
-class User(db.Model):
+
+@login_manager.user_loader
+def load_user(user_id):
+	return User.query.get(int(user_id))
+
+
+#Database model for User accounts
+class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(20), unique=True, nullable=False)
 	email = db.Column(db.String(120), unique=True, nullable=False)
@@ -12,7 +20,8 @@ class User(db.Model):
 	def __repr__(self):
 		return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
-#Model for creating the different posts created by the users above
+
+#Database model for forum posts
 class Post(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	title = db.Column(db.String(100), nullable=False)
@@ -22,3 +31,58 @@ class Post(db.Model):
 
 	def __repr__(self):
 		return f"Post('{self.title}', '{self.date_posted}')"
+
+
+#Model for classifications (Mammals, reptiles etc)
+class Classification(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	classification_type = db.Column(db.String(100), nullable=False)
+
+	def __repr__(self):
+		return f"Classification('{self.classificationType}')"
+
+
+#Model for the animals
+class Animal(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	species = db.Column(db.String(60), nullable=False)
+	classification = db.Column(db.String(20), db.ForeignKey('classification.classification_type'), nullable=False)
+	feeding_information = db.Column(db.String(150), nullable=False)
+	residency_status = db.Column(db.String(150), nullable=False)
+	qrCode_image = db.Column(db.String(20))
+	
+	def __repr__(self):
+		return f"Animal('{self.species}', '{self.feeding_information}', '{self.residency_status}', '{self.qrCode_image}')"
+
+
+#Storing feedings
+class Feedings(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	extra_info = db.Column(db.String(60))
+
+	def __repr__(self):
+		return f"Feedings('{self.user_id}', '{self.date_completed}', '{self.extra_info}')"
+
+
+#Storing Cleanings
+class Cleanings(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	extra_info = db.Column(db.String(60))
+
+	def __repr__(self):
+		return f"Cleanings('{self.user_id}', '{self.date_completed}', '{self.extra_info}')"
+
+
+#Monitoring Information
+class Monitoring(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	extra_info = db.Column(db.String(60))
+
+	def __repr__(self):
+		return f"Monitoring('{self.user_id}', '{self.date_completed}', '{self.extra_info}')"
