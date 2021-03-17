@@ -43,13 +43,13 @@ class Classification(db.Model):
 
 
 #Model for the animals
-class Animal(db.Model):
+class Animal(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	species = db.Column(db.String(60), nullable=False)
 	classification = db.Column(db.String(20), db.ForeignKey('classification.classification_type'), nullable=False)
 	feeding_information = db.Column(db.String(150), nullable=False)
 	residency_status = db.Column(db.String(150), nullable=False)
-	qrCode_image = db.Column(db.String(20))
+	qrCode_image = db.Column(db.String(20), default='defaultanimal.jpg')
 	
 	def __repr__(self):
 		return f"Animal('{self.species}', '{self.feeding_information}', '{self.residency_status}', '{self.qrCode_image}')"

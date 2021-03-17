@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, DateTimeField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from SAMapp.models import User
 
@@ -31,6 +31,7 @@ class LoginForm(FlaskForm):
 	remember =  BooleanField('Remember Me')
 	submit = SubmitField('Login')
 
+#For changing details about the current account 
 class UpdateAccountForm(FlaskForm):
 	username = StringField('Username', validators=[DataRequired(), Length(min=2, max =20)])
 	email = StringField('Email', validators=[DataRequired(), Email()])
@@ -54,8 +55,43 @@ class UpdateAccountForm(FlaskForm):
 class AddAnimal(FlaskForm):
 	#Dropdown for selecting classification
 	classification = ['Mammal', 'Reptile', 'Amphibian', 'Bird', 'Fish', 'Invertebrate']
-	seqSimilarity = SelectField('Delivery Types', choices=classification, default=1)
+	seqSimilarity = SelectField('Delivery Types', choices=classification) #SPAGHETTI 
+
 	species = StringField('Species', validators=[DataRequired()])
 	feeding_information = StringField('Feed Information', validators=[DataRequired(), Length(max =150)])
 	residency_status = StringField('Residency Status', validators=[DataRequired(), Length(max =150)])
 	#qrCode_image = 
+
+#For updating each animals info
+class UpdateAnimalInfoForm(FlaskForm):
+	species = StringField('Species', validators=[DataRequired()])
+	feeding_information = StringField('Feed Information', validators=[DataRequired(), Length(max =150)])
+	residency_status = StringField('Residency Status', validators=[DataRequired(), Length(max =150)])
+
+#Selecting current animal??????????????????????
+#class SelectCurrentAnimalForm(FlaskForm):
+	#select_animal = dropdown of animals
+
+#Form for adding feedings
+class AddFeedingForm(FlaskForm):
+	completed = BooleanField('Completed')
+	date_time = DateTimeField('Date & Time')
+	extra_information = StringField('Extra Information', validators=[DataRequired(), Length(max =150)]) 
+
+#Form for adding cleanings
+class AddCleaningForm(FlaskForm):
+	completed = BooleanField('Completed')
+	date_time = DateTimeField('Date & Time')
+	extra_information = StringField('Extra Information', validators=[DataRequired(), Length(max =150)])
+
+#Form for adding monitoring
+class AddMonitoringForm(FlaskForm):
+	completed = BooleanField('Completed')
+	date_time = DateTimeField('Date & Time')
+	extra_information = StringField('Extra Information', validators=[DataRequired(), Length(max =150)])
+
+#Forum post form
+class PostForm(FlaskForm):
+	title = StringField('Title', validators=[DataRequired()])
+	content = TextAreaField('Content', validators=[DataRequired()])
+	submit = SubmitField('Post')

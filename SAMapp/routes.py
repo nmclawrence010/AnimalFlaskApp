@@ -1,32 +1,11 @@
 import os
 import secrets
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from SAMapp import app, db, bcrypt
-from SAMapp.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from SAMapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from SAMapp.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
-
-posts = [
-	{
-		"author": "Niall Mclawrence",
-		"title": "Forum Test 1",
-		"content": "First Post Content",
-		"date_posted": "Feb 16, 2021"
-	},
-	{
-		"author": "Thomas Phillips",
-		"title": "Forum Test 2",
-		"content": "Second Post Content",
-		"date_posted": "Feb 17, 2021"
-	},
-	{
-		"author": "Andrew Lovell",
-		"title": "Forum Test 3",
-		"content": "Third Post Content",
-		"date_posted": "Feb 17, 2021"
-	}
-]
 
 @app.route("/")
 @app.route("/home")
@@ -37,9 +16,66 @@ def home():
 def logbook():
 	return render_template("logbook.html")
 
+#Select what the current animal is ?????????????????????????????????????????
+def current_animal(species):
+	form = SelectCurrentAnimalForm
+	if form.validate_on_submit():
+		species = AddAnimal.query.filter_by(species=species.data).first()
+
 @app.route("/forums")
 def forums():
+	posts = Post.query.all()
 	return render_template("forums.html", posts=posts)
+
+#Creating posts
+@app.route("/post/new", methods=['GET', 'POST'])
+@login_required
+def new_post():
+	form = PostForm()
+	if form.validate_on_submit():
+		post = Post(title=form.title.data, content=form.content.data, author=current_user)
+		db.session.add(post)
+		db.session.commit()
+		flash('Your post has been created!', 'success')
+		return redirect(url_for('forums'))
+	return render_template('create_post.html', title='New Post', form=form, legend='New Post')
+
+#For going to specific posts
+@app.route("/post/<int:post_id>")
+def post(post_id):
+	post = Post.query.get_or_404(post_id)
+	return render_template('post.html', title=post.title, post=post)
+
+#For updating and deleting posts
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	if post.author != current_user:
+		abort(403)
+	form = PostForm()
+	if form.validate_on_submit():
+		post.title = form.title.data
+		post.content = form.content.data
+		db.session.commit()
+		flash('Your post has been updated!', 'success')
+		return redirect(url_for('post', post_id=post.id))
+	elif request.method == 'GET':
+		form.title.data = post.title
+		form.content.data = post.content
+	return render_template('create_post.html', title='Update Post', form=form,
+							legend='Update Post')
+
+@app.route("/post/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('home'))
 
 @app.route("/about")
 def about():
@@ -54,8 +90,8 @@ def register():
 		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')       #Hashes the password on submit
 		user = User(username=form.username.data, email=form.email.data, password=hashed_password) #Passes in the hashed password
 		db.session.add(user)
-		db.session.commit() #adds user to database
-		flash('Your account has been created! You can now log in', 'success')   #Shows message on creation
+		db.session.commit() 													#adds user to database
+		flash('Your account has been created! You can now log in', 'success')   #Message user sees on creation
 		return redirect(url_for('login'))										#Sends them to login page
 	return render_template('register.html', title='Register', form=form)
 
@@ -86,10 +122,11 @@ def save_picture(form_picture):
 	picture_fn =random_hex + f_ext
 	picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
 	
-	output_size = (125, 125)		#
-	i = Image.open(form_picture)	#
-	i.thumbnail(output_size)		#Resizing the image before saving
-	i.save(picture_path)			#
+	#Resizing the image before saving
+	output_size = (125, 125)
+	i = Image.open(form_picture)
+	i.thumbnail(output_size)		
+	i.save(picture_path)
 
 	return picture_fn
 

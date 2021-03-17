@@ -1,35 +1,113 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Logbook</h1>
+
 <!-- Section for displaying the general animal info like name, feeding info and residency status -->
-<div class="content-section">
-	<div class="media">
-		<div class="media-body">
-			<h2 class="account-heading">{{ current_animal.species }}</h2>
+<!--form method="POST" action="" enctype="multipart/form-data"-->
+		
+		<fieldset class="form-group">
+			<div class="content-section">
+				<div class="media">
+					<img class="rounded-circle account-img" src="{{ qrCode_image }}">
+					<div class="media-body">
+					<h2 class="account-heading">Species Name</h2>
+					<p class="text-secondary"><button type="button" class="btn btn-default btn-sm">
+          			<span class="glyphicon glyphicon-pencil"></span> Edit 
+        			</button> Feeding information </p>
+					<p class="text-secondary"><button type="button" class="btn btn-default btn-sm">
+          			<span class="glyphicon glyphicon-pencil"></span> Edit 
+        			</button> Residency status </p></p>
+					</div>
+				</div>
+			</div>
 
+			<div class="content-section">
+				<!-- Section for showing the recent feedings -->
+				<table class="table">
+				  <thead class="thead-dark">
+				  	<h3>Feeding</h3>
+				    <tr>
+				      <th scope="col">User</th>
+				      <th scope="col">Date & Time Completed</th>
+				      <th scope="col">Extra Information</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <td>Niall</td>
+				      <td>16/03/2021</td>
+				      <td>AAA</td>
+				    </tr>
+				    <tr>
+				      <td>Thomas</td>
+				      <td>17/03/2021</td>
+				      <td>BBB</td>
+				    </tr>
+				    <tr>
+				      <td>Andrew</td>
+				      <td>18/03/2021</td>
+				      <td>CCC</td>
+				    </tr>
+				  </tbody>
+				</table>
 
+				<!-- Section for showing the recent cleanings -->
+				<table class="table">
+				  <thead class="thead-dark">
+				  	<h3>Cleaning</h3>
+				    <tr>
+				      <th scope="col">User</th>
+				      <th scope="col">Date & Time Completed</th>
+				      <th scope="col">Extra Information</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <td>Niall</td>
+				      <td>16/03/2021</td>
+				      <td>AAA</td>
+				    </tr>
+				    <tr>
+				      <td>Thomas</td>
+				      <td>17/03/2021</td>
+				      <td>BBB</td>
+				    </tr>
+				    <tr>
+				      <td>Andrew</td>
+				      <td>18/03/2021</td>
+				      <td>CCC</td>
+				    </tr>
+				  </tbody>
+				</table>
 
-		</div>
-	</div>
-</div>
-
-<!-- Section for showing the recent feedings -->
-<div class="content-section">
-<h2>Feedings</h2>	
-<table>
-	<thead>
-		<tr>
-			<th> User </th>
-			<th> Date & Time Completed </th>
-			<th> Extra Information </th>
-		</tr>
-		<tr>
-
-
-
-
-		</tr>
-	</thead>
-</table>
-</div>
+				<!-- Section for showing the recent monitoring -->
+				<table class="table">
+				  <thead class="thead-dark">
+				  	<h3>Monitoring</h3>
+				    <tr>
+				      <th scope="col">User</th>
+				      <th scope="col">Date & Time Completed</th>
+				      <th scope="col">Extra Information</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <td>Niall</td>
+				      <td>16/03/2021</td>
+				      <td>AAA</td>
+				    </tr>
+				    <tr>
+				      <td>Thomas</td>
+				      <td>17/03/2021</td>
+				      <td>BBB</td>
+				    </tr>
+				    <tr>
+				      <td>Andrew</td>
+				      <td>18/03/2021</td>
+				      <td>CCC</td>
+				    </tr>
+				  </tbody>
+				</table>
+			</div>
+		<!--/fieldset>
+</form-->
 {% endblock content %}
