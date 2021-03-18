@@ -53,7 +53,6 @@ class UpdateAccountForm(FlaskForm):
 				raise ValidationError('That email is taken. Please choose a different one.')
 
 class AddAnimal(FlaskForm):
-	#Dropdown for selecting classification
 	classification = ['Mammal', 'Reptile', 'Amphibian', 'Bird', 'Fish', 'Invertebrate']
 	seqSimilarity = SelectField('Delivery Types', choices=classification) #SPAGHETTI 
 
@@ -62,7 +61,7 @@ class AddAnimal(FlaskForm):
 	residency_status = StringField('Residency Status', validators=[DataRequired(), Length(max =150)])
 	#qrCode_image = 
 
-#For updating each animals info
+#For changing each animals current info
 class UpdateAnimalInfoForm(FlaskForm):
 	species = StringField('Species', validators=[DataRequired()])
 	feeding_information = StringField('Feed Information', validators=[DataRequired(), Length(max =150)])

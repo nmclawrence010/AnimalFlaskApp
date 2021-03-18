@@ -17,21 +17,22 @@ def logbook():
 	return render_template("logbook.html")
 
 #Select what the current animal is ?????????????????????????????????????????
-def current_animal(species):
-	form = SelectCurrentAnimalForm
+def current_animal(current_species):
+	form = SelectCurrentAnimalForm()
 	if form.validate_on_submit():
-		species = AddAnimal.query.filter_by(species=species.data).first()
+		current_species = AddAnimal.query.filter_by(species=species.data).first()
 
 @app.route("/forums")
 def forums():
 	posts = Post.query.all()
 	return render_template("forums.html", posts=posts)
 
-#Creating posts
+#Creating new posts
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
 	form = PostForm()
+	#If the data entered on the form meets our validation then adds the post to our db
 	if form.validate_on_submit():
 		post = Post(title=form.title.data, content=form.content.data, author=current_user)
 		db.session.add(post)
@@ -43,14 +44,17 @@ def new_post():
 #For going to specific posts
 @app.route("/post/<int:post_id>")
 def post(post_id):
+	#Stops them from going to a post that doesn't exist
 	post = Post.query.get_or_404(post_id)
 	return render_template('post.html', title=post.title, post=post)
 
-#For updating and deleting posts
+#For updating current posts
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
+	#Checks if the post exists in our db
 	post = Post.query.get_or_404(post_id)
+	#Checks that the current user is the owner of the post and throws a 403 error if not
 	if post.author != current_user:
 		abort(403)
 	form = PostForm()
@@ -60,20 +64,26 @@ def update_post(post_id):
 		db.session.commit()
 		flash('Your post has been updated!', 'success')
 		return redirect(url_for('post', post_id=post.id))
+	#Gets the current details and displays them in the text fields
 	elif request.method == 'GET':
 		form.title.data = post.title
 		form.content.data = post.content
 	return render_template('create_post.html', title='Update Post', form=form,
 							legend='Update Post')
 
+#For deleting a post
 @app.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required
 def delete_post(post_id):
+	#Checks if the post exists in our db
     post = Post.query.get_or_404(post_id)
+    #Checks that the current user is the owner of the post and throws a 403 error if not
     if post.author != current_user:
         abort(403)
+    #Deletes the post from the db
     db.session.delete(post)
     db.session.commit()
+    #Confirmation message that their post has been deleted
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
 
@@ -87,12 +97,17 @@ def register():
 		return redirect(url_for('home'))
 	form = RegistrationForm()
 	if form.validate_on_submit():
-		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')       #Hashes the password on submit
-		user = User(username=form.username.data, email=form.email.data, password=hashed_password) #Passes in the hashed password
+		#Hashes the password on submit
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+		#Passes in the hashed password
+		user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+		#adds user to database
 		db.session.add(user)
-		db.session.commit() 													#adds user to database
-		flash('Your account has been created! You can now log in', 'success')   #Message user sees on creation
-		return redirect(url_for('login'))										#Sends them to login page
+		db.session.commit()
+		#Message user sees on creation												
+		flash('Your account has been created! You can now log in', 'success')
+		#Sends the user to the login page to now login
+		return redirect(url_for('login'))
 	return render_template('register.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -101,13 +116,16 @@ def login():
 		return redirect(url_for('home'))
 	form = LoginForm()
 	if form.validate_on_submit():
-		user = User.query.filter_by(email=form.email.data).first()                  #Checks if email exists in our db
-		if user and bcrypt.check_password_hash(user.password, form.password.data):  #Same for password
+		#Checks if email exists in our db
+		user = User.query.filter_by(email=form.email.data).first()
+		#Same for password
+		if user and bcrypt.check_password_hash(user.password, form.password.data):
 			login_user(user, remember=form.remember.data)
 			next_page = request.args.get('next')							
 			return  redirect(next_page) if  next_page else redirect(url_for('home'))
 		else:
-			flash('Login Unsuccessful. Please check email and password', 'danger')	#if failed will show this message
+			#If failed it will show this message
+			flash('Login Unsuccessful. Please check email and password', 'danger')
 	return render_template('login.html', title='Login', form=form)	
 
 @app.route("/logout")
@@ -117,6 +135,7 @@ def logout():
 
 #Saving the profile pic
 def save_picture(form_picture):
+	#Creates a random 8 bit hex code to assign the image name so we dont have repeat names in the db
 	random_hex = secrets.token_hex(8)
 	_, f_ext = os.path.splitext(form_picture.filename)
 	picture_fn =random_hex + f_ext
@@ -130,7 +149,7 @@ def save_picture(form_picture):
 
 	return picture_fn
 
-#Logging in
+#Updating account details
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
@@ -144,6 +163,7 @@ def account():
 		db.session.commit()
 		flash('Your account has been updated', 'success')
 		return redirect(url_for('account'))
+	#Gets the current details and displays them in the text fields
 	elif request.method == 'GET':
 		form.username.data = current_user.username
 		form.email.data = current_user.email
