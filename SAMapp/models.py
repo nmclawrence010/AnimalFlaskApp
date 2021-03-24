@@ -1,4 +1,5 @@
 from datetime import datetime
+from flask import url_for, current_app
 from SAMapp import db, login_manager
 from flask_login import UserMixin 
 
@@ -43,16 +44,17 @@ class Classification(db.Model):
 
 
 #Model for the animals
-class Animal(db.Model, UserMixin):
+class Animal(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	species = db.Column(db.String(60), nullable=False)
-	classification = db.Column(db.String(20), db.ForeignKey('classification.classification_type'), nullable=False)
-	feeding_information = db.Column(db.String(150), nullable=False)
-	residency_status = db.Column(db.String(150), nullable=False)
-	qrCode_image = db.Column(db.String(20), default='defaultanimal.jpg')
+	species = db.Column(db.String(75), nullable=False)
+	feeding_information = db.Column(db.String(200), nullable=False)
+	residency_status = db.Column(db.String(200), nullable=False)
+	extra_information = db.Column(db.String(200))
+	animal_image = db.Column(db.String(20), default='defaultanimal.jpg')
+	animal_qr = db.Column(db.String(20))
 	
 	def __repr__(self):
-		return f"Animal('{self.species}', '{self.feeding_information}', '{self.residency_status}', '{self.qrCode_image}')"
+		return f"Animal('{self.species}', '{self.feeding_information}', '{self.residency_status}', '{self.animal_image}', '{self.extra_information}')"
 
 
 #Storing feedings

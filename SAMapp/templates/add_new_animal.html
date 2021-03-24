@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+	<form method="POST" action="">
+		{{ form .hidden_tag()}}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">Add a new animal</legend>
+			<div class="form-group">
+				{{ form.species.label(class="form-control-label") }}
+
+				{% if form.species.errors %}
+				{{ form.species(class="form-control form-control-lg is-invalid") }}
+				<div class="invaild-feedback">
+					{% for error in form.species.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+					{{ form.species(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+			<div class="form-group">
+				{{ form.feeding_information.label(class="form-control-label") }}
+
+				{% if form.feeding_information.errors %}
+				{{ form.feeding_information(class="form-control form-control-lg is-invalid") }}
+				<div class="invaild-feedback">
+					{% for error in form.feeding_information.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+					{{ form.feeding_information(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+			<div class="form-group">
+				{{ form.residency_status.label(class="form-control-label") }}
+
+				{% if form.residency_status.errors %}
+				{{ form.residency_status(class="form-control form-control-lg is-invalid") }}
+				<div class="invaild-feedback">
+					{% for error in form.residency_status.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+					{{ form.residency_status(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+			<div class="form-group">
+				{{ form.extra_information.label(class="form-control-label") }}
+
+				{% if form.extra_information.errors %}
+				{{ form.extra_information(class="form-control form-control-lg is-invalid") }}
+				<div class="invaild-feedback">
+					{% for error in form.extra_information.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+					{{ form.extra_information(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+		</fieldset>
+		<div class="form-group">
+			{{ form.submit(class="btn btn-outline-info") }}
+		</div>
+	</form>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<h2>Add new animal</h2>
+			<p>aaaaaaaaaaaaaaaaaaaaaaaaa</p>
+		</div>
+		<form action="/converted" method="post">
+			<input type="text" class="form-control" placeholder="enter text" name="Test" required="required" />
+			<button class="btn btn-primary" value="Generate QR" type="submit">generate qr</button>
+
+		</form>
+	</div>
+	<div class="Generator">
+		<img id="qr" src="" width="50%">
+	</div>
+</div>
+{% endblock content %}

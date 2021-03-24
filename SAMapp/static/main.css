@@ -91,6 +91,7 @@ a.article-title:hover {
   font-size: 20px;
   border-radius: 2px; /* rounds the corners*/
   padding: 12px 28px;
+  display: inline !important;
 }
 
 .button2:hover {

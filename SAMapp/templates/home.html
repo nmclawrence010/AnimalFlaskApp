@@ -1,9 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>Home</h1>
-<button class="button button2">Update Animal</button>
-<button class="button button2">Add New Animal</button>
-
+  <form action="/updateanimal">
+      <button class="button button2" href="{{ url_for('main.home') }}">Update Animal</button>
+  </form>
+  <form action="/animal/new">
+      <button class="button button2">Add New Animal</button>
+  </form>
 <article class="media content-section">
   <div class="media-body">
   	<p>&nbsp;</p> 

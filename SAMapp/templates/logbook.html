@@ -5,20 +5,23 @@
 <!--form method="POST" action="" enctype="multipart/form-data"-->
 		
 		<fieldset class="form-group">
-			<div class="content-section">
-				<div class="media">
-					<img class="rounded-circle account-img" src="{{ qrCode_image }}">
-					<div class="media-body">
-					<h2 class="account-heading">Species Name</h2>
-					<p class="text-secondary"><button type="button" class="btn btn-default btn-sm">
-          			<span class="glyphicon glyphicon-pencil"></span> Edit 
-        			</button> Feeding information </p>
-					<p class="text-secondary"><button type="button" class="btn btn-default btn-sm">
-          			<span class="glyphicon glyphicon-pencil"></span> Edit 
-        			</button> Residency status </p></p>
-					</div>
-				</div>
-			</div>
+		  <article class="media content-section">
+		    <img class="rounded-circle article-img" src="{{ url_for('static', filename='animal_pics/' + animal.animal_image) }}">
+		    <div class="media-body">
+		      <div class="article-metadata">
+		        <a class="mr-2" href="{{ url_for('main.animal', species=animal.species) }}">{{ animal.species }}</a>
+		        
+		          <div>
+		            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_post', post_id=post.id) }}">Update</a>
+		            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+		          </div>
+		        
+		      </div>
+		      <h2 class="article-title">{{ animal.species }}</h2>
+		      <p class="article-content">{{ animal.feeding_information }}</p>
+		      <p class="article-content">{{ animal.residency_status }}</p>
+		    </div>
+		  </article>
 
 			<div class="content-section">
 				<!-- Section for showing the recent feedings -->
@@ -110,4 +113,24 @@
 			</div>
 		<!--/fieldset>
 </form-->
+
+<!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Animal</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}
