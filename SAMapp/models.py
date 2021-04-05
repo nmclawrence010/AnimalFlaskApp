@@ -34,15 +34,6 @@ class Post(db.Model):
 		return f"Post('{self.title}', '{self.date_posted}')"
 
 
-#Model for classifications (Mammals, reptiles etc)
-class Classification(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	classification_type = db.Column(db.String(100), nullable=False)
-
-	def __repr__(self):
-		return f"Classification('{self.classificationType}')"
-
-
 #Model for the animals
 class Animal(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -55,6 +46,15 @@ class Animal(db.Model):
 	
 	def __repr__(self):
 		return f"Animal('{self.species}', '{self.feeding_information}', '{self.residency_status}', '{self.animal_image}', '{self.extra_information}')"
+
+
+#Model for classifications (Mammals, reptiles etc)
+class Classification(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	classification_type = db.Column(db.String(100), nullable=False)
+
+	def __repr__(self):
+		return f"Classification('{self.classificationType}')"
 
 
 #Storing feedings

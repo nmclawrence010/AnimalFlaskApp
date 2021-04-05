@@ -2,14 +2,13 @@
 {% block content %}
 
 <!-- Section for displaying the general animal info like name, feeding info and residency status -->
-<!--form method="POST" action="" enctype="multipart/form-data"-->
+<form method="POST" action="" enctype="multipart/form-data">
 		
 		<fieldset class="form-group">
 		  <article class="media content-section">
-		    <img class="rounded-circle article-img" src="{{ url_for('static', filename='animal_pics/' + animal.animal_image) }}">
-		    <div class="media-body">
+			<img class="rounded-circle account-img" src="{{ animal_image }}">
 		      <div class="article-metadata">
-		        <a class="mr-2" href="{{ url_for('main.animal', species=animal.species) }}">{{ animal.species }}</a>
+		        <a class="mr-2" href="{{ url_for('main.animal_profiles', this_species=animal.species) }}">{{ animal.species }}</a>
 		        
 		          <div>
 		            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_post', post_id=post.id) }}">Update</a>
@@ -111,8 +110,8 @@
 				  </tbody>
 				</table>
 			</div>
-		<!--/fieldset>
-</form-->
+		</fieldset>
+</form>
 
 <!-- Modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

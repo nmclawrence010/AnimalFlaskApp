@@ -1,5 +1,3 @@
-import os
-import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flask import * 
@@ -39,8 +37,7 @@ def addnewanimal():
 	form = AddAnimalForm()
 	if form.validate_on_submit():
 		animal = Animal(species=form.species.data, feeding_information=form.feeding_information.data
-						,residency_status=form.residency_status.data, extra_information=form.extra_information.data
-						,animal_image=default)
+						,residency_status=form.residency_status.data, extra_information=form.extra_information.data)
 		db.session.add(animal)
 		db.session.commit()
 		flash('New animal added', 'success')
@@ -49,11 +46,11 @@ def addnewanimal():
 
 
 #For going to specific animals
-@main.route("/logbook/<string:species>")
-def animal(species):
+@main.route("/logbook/<string:this_species>")
+def animal_profiles(this_species):
 	#Stops them from going to an animal that doesn't exist
-	animal = Animal.query.get_or_404(species)
-	return render_template('logbook.html', title=animal.species, animal=animal)
+	animal = Animal.query.filter_by(this_species=species).first_or_404()
+	return render_template('logbook.html', this_species=animal.species)
 
 
 @main.route('/converted', methods = ['POST'])

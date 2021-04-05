@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, g, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from SAMapp.config import Config
+from SAMapp import QRCode
 
 db= SQLAlchemy()
 bcrypt = Bcrypt()
@@ -11,7 +12,6 @@ login_manager.login_view ='users.login'
 login_manager.login_message_category = 'info'
  
 from SAMapp.models import User, Post, Animal
-from SAMapp import QRCode
 
 def create_app(config_class=Config):
 	app = Flask(__name__)
@@ -21,7 +21,6 @@ def create_app(config_class=Config):
 
 	with app.app_context():
 		db.create_all()
-		db.session.commit()
 
 	bcrypt.init_app(app)
 	login_manager.init_app(app)
