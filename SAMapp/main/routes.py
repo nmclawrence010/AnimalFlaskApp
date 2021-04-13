@@ -49,8 +49,9 @@ def addnewanimal():
 @main.route("/logbook/<string:this_species>")
 def animal_profiles(this_species):
 	#Stops them from going to an animal that doesn't exist
-	animal = Animal.query.filter_by(this_species=species).first_or_404()
-	return render_template('logbook.html', this_species=animal.species)
+	#animal_profiles = Animal.query.get_or_404(this_species)
+	animal_profiles = Animal.query.filter_by(species=this_species).first_or_404()
+	return render_template('logbook.html', animal=animal_profiles)
 
 
 @main.route('/converted', methods = ['POST'])
