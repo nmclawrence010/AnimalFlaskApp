@@ -107,3 +107,17 @@ a.article-title:hover {
 .table {
   margin-bottom: 25px;
 }
+
+.inline {
+   display:inline-block;
+   margin-right:5px;
+}
+
+thead th {
+    background-color: #5f788a !important;
+    color: white;
+}
+
+tbody td {
+    background-color: #EEEEEE;
+}

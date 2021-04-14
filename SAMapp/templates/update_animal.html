@@ -61,6 +61,16 @@
 					{{ form.extra_information(class="form-control form-control-lg") }}
 				{% endif %}
 			</div>
+			<div class="form-group">
+				{{ form.animal_image.label() }}
+				{{ form.animal_image(class="form-control-file") }}
+				{% if form.animal_image.errors %}
+					{% for error in form.animal_image.errors %}
+						<span class="text-danger">{{ error }}</span></br>
+					{% endfor %}
+				{% endif %}
+
+			</div>
 		</fieldset>
 		<div class="form-group">
 			{{ form.submit(class="btn btn-outline-info") }}

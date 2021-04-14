@@ -1,22 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>Home</h1>
-  <form action="/updateanimal">
-      <button class="button button2" href="{{ url_for('main.home') }}">Update Animal</button>
-  </form>
-  <form action="/animal/new">
-      <button class="button button2">Add New Animal</button>
-  </form>
-<article class="media content-section">
-  <div class="media-body">
-  	<p>&nbsp;</p> 
-  	<p>&nbsp;</p> 
-  	<p>&nbsp;</p> 
-  	<p>&nbsp;</p> 
-  	<p>&nbsp;</p> 
-  	<p>&nbsp;</p> 
-  	<p>&nbsp;</p> 
-  	<p>&nbsp;</p> 
-  	<p>&nbsp;</p> 
-</article>
+  <div style="float:left;">
+    <form action="/updateanimal">
+        <button class="button button2" href="{{ url_for('main.home') }}">Update Animal</button>
+    </form>
+  </div>
+  <div style="float:left;">
+    <form action="/animal/new">
+        <button class="button button2">Add New Animal</button>
+    </form>
+  </div>
+  <div>
+
+  </div>
 {% endblock content %}
