@@ -4,12 +4,14 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from SAMapp.config import Config
 from SAMapp import QRCode
+#import mysql.connector
 
 db= SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_view ='users.login'
 login_manager.login_message_category = 'info'
+
  
 from SAMapp.models import User, Post, Animal
 

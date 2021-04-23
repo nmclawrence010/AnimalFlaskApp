@@ -4,7 +4,7 @@
 <!-- Section for displaying the general animal info like name, feeding info and residency status -->
 <div class="content-section">
 	<div class="media">
-		<img class="rounded-circle account-img" src="{{ animal_image }}">
+		<img class="rounded-circle account-img" style="margin-right:30px;margin-top: 15px" src="{{ animal_image }}">
 		<div class="media-body">
 			<h2 class="article-title">{{ animal.species }}</h2>
 		    <p class="article-content"><strong>Feeding Information:</strong> {{ animal.feeding_information }}</p>
@@ -23,30 +23,21 @@
 				<!-- Section for showing the recent feedings -->
 				<table class="table">
 				  <thead class="thead-dark">
-				  	<h3>Feeding <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.update_animal', this_species=animal.species) }}" style="float:right">Add</a></h3>
-
+				  	<h3>Feeding <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.new_feeding', this_species=animal.species) }}" style="float:right">Add</a></h3>
 				    <tr>
-				      <th scope="col">User</th>
+				      <th scope="col">User Completed</th>
 				      <th scope="col">Date & Time Completed</th>
 				      <th scope="col">Extra Information</th>
 				    </tr>
 				  </thead>
 				  <tbody>
+				  	{% for row in feeding_data %}
 				    <tr>
-				      <td>Niall</td>
-				      <td>16/03/2021</td>
-				      <td>AAA</td>
+				    	{% for cell in row %}
+				      		<td>{{ cell }}</td>
+				      	{% endfor %}
 				    </tr>
-				    <tr>
-				      <td>Thomas</td>
-				      <td>17/03/2021</td>
-				      <td>BBB</td>
-				    </tr>
-				    <tr>
-				      <td>Andrew</td>
-				      <td>18/03/2021</td>
-				      <td>CCC</td>
-				    </tr>
+				    {% endfor %}
 				  </tbody>
 				</table>
 
@@ -55,7 +46,7 @@
 				  <thead class="thead-dark">
 				  	<h3>Cleaning <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.update_animal', this_species=animal.species) }}" style="float:right">Add</a></h3>
 				    <tr>
-				      <th scope="col">User</th>
+				      <th scope="col">User Completed</th>
 				      <th scope="col">Date & Time Completed</th>
 				      <th scope="col">Extra Information</th>
 				    </tr>
@@ -63,17 +54,17 @@
 				  <tbody>
 				    <tr>
 				      <td>Niall</td>
-				      <td>16/03/2021</td>
+				      <td>16/03/2021 13:00</td>
 				      <td>AAA</td>
 				    </tr>
 				    <tr>
 				      <td>Thomas</td>
-				      <td>17/03/2021</td>
+				      <td>17/03/2021 13:00</td>
 				      <td>BBB</td>
 				    </tr>
 				    <tr>
 				      <td>Andrew</td>
-				      <td>18/03/2021</td>
+				      <td>18/03/2021 13:00</td>
 				      <td>CCC</td>
 				    </tr>
 				  </tbody>
@@ -84,7 +75,7 @@
 				  <thead class="thead-dark">
 				  	<h3>Monitoring <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.update_animal', this_species=animal.species) }}" style="float:right">Add</a></h3>
 				    <tr>
-				      <th scope="col">User</th>
+				      <th scope="col">User Completed</th>
 				      <th scope="col">Date & Time Completed</th>
 				      <th scope="col">Extra Information</th>
 				    </tr>
@@ -92,17 +83,17 @@
 				  <tbody>
 				    <tr>
 				      <td>Niall</td>
-				      <td>16/03/2021</td>
+				      <td>16/03/2021 13:00</td>
 				      <td>AAA</td>
 				    </tr>
 				    <tr>
 				      <td>Thomas</td>
-				      <td>17/03/2021</td>
+				      <td>17/03/2021 13:00</td>
 				      <td>BBB</td>
 				    </tr>
 				    <tr>
 				      <td>Andrew</td>
-				      <td>18/03/2021</td>
+				      <td>18/03/2021 13:00</td>
 				      <td>CCC</td>
 				    </tr>
 				  </tbody>

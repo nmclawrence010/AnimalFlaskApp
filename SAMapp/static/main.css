@@ -9,7 +9,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .bg-steel {
-  background-color: #5f788a;
+  background-color: #5e7875;
 }
 
 .site-header{
@@ -84,7 +84,7 @@ a.article-title:hover {
 }
 
 .button2 {
-  background-color: #5f788a; 
+  background-color: #5e7875; 
   color: white; 
   border: 1px solid #fafafa;
   margin-bottom: 25px;
@@ -114,7 +114,7 @@ a.article-title:hover {
 }
 
 thead th {
-    background-color: #5f788a !important;
+    background-color: #5e7875 !important;
     color: white;
 }
 

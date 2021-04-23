@@ -2,11 +2,12 @@ from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flask import * 
 from SAMapp import db, bcrypt
-from SAMapp.models import User, Post, Animal
-from SAMapp.main.forms import AddAnimalForm, UpdateAnimalInfoForm
+from SAMapp.models import User, Post, Animal, Feedings
+from SAMapp.main.forms import AddAnimalForm, UpdateAnimalInfoForm, AddFeedingForm
 from flask_login import login_user, current_user, logout_user, login_required
 from SAMapp.QRCode import qrgen
 from SAMapp.users.utils import save_picture_animal
+import mysql.connector
 
 main = Blueprint('main', __name__)
 
@@ -49,10 +50,11 @@ def addnewanimal():
 #For going to specific animals
 @main.route("/logbook/<string:this_species>")
 def animal_profiles(this_species):
-	#Stops them from going to an animal that doesn't exist
-	#animal_profiles = Animal.query.get_or_404(this_species)
 	animal_profiles = Animal.query.filter_by(species=this_species).first_or_404()
-	return render_template('logbook.html', animal=animal_profiles)
+	feeding_data = db.engine.execute("SELECT user_id, date_completed, extra_info FROM feedings")
+	#feeding_data = db.engine.execute("SELECT User.username, date_completed, extra_info FROM feedings, User")
+	animal_image = url_for('static', filename='animal_pics/' + animal_profiles.animal_image)
+	return render_template('logbook.html', animal=animal_profiles, feeding_data = feeding_data, animal_image=animal_image)
 
 
 @main.route("/logbook/<string:this_species>/update", methods=['GET', 'POST'])
@@ -61,7 +63,7 @@ def update_animal(this_species):
 	form = UpdateAnimalInfoForm()
 	if form.validate_on_submit():
 		if form.animal_image.data:
-			picture_file = save_picture_animal(form.picture.data)
+			picture_file = save_picture_animal(form.animal_image.data)
 			animal.animal_image = picture_file
 		animal.species = form.species.data
 		animal.feeding_information = form.feeding_information.data
@@ -76,8 +78,21 @@ def update_animal(this_species):
 		form.residency_status.data = animal.residency_status
 		form.extra_information.data = animal.extra_information
 	animal_image = url_for('static', filename='animal_pics/' + animal.animal_image)
-	return render_template('update_animal.html', form=form, legend='Update existing animal')
+	return render_template('update_animal.html', form=form, animal_image = animal_image, legend='Update existing animal')
 
+
+@main.route("/logbook/<string:this_species>/new_feeding", methods=['GET', 'POST'])
+@login_required
+def new_feeding(this_species):
+	animal = Animal.query.filter_by(species=this_species).first_or_404()
+	form = AddFeedingForm()
+	if form.validate_on_submit():
+		feeding = Feedings(extra_info=form.extra_information.data, animal_feedings = animal, user_completed = current_user)
+		db.session.add(feeding)
+		db.session.commit()
+		flash('Feeding successfully added', 'success')
+		return redirect(url_for('main.animal_profiles', this_species=animal.species))
+	return render_template("add_new_feeding.html", form=form, legend='Add Feeding')
 
 #For deleting an animal
 @main.route("/logbook/<string:this_species>/delete", methods=['POST'])

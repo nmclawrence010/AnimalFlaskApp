@@ -17,6 +17,9 @@ class User(db.Model, UserMixin):
 	image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
 	password = db.Column(db.String(60), nullable=False)
 	posts = db.relationship('Post', backref='author', lazy=True)
+	feedings_completed = db.relationship('Feedings', backref='user_completed', lazy=True)
+	cleanings_completed = db.relationship('Cleanings', backref='user2_completed', lazy=True)
+	monitoring_completed = db.relationship('Monitoring', backref='user3_completed', lazy=True)
 
 	def __repr__(self):
 		return f"User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -43,7 +46,8 @@ class Animal(db.Model):
 	extra_information = db.Column(db.String(200))
 	animal_image = db.Column(db.String(20), default='defaultanimal.jpg')
 	animal_qr = db.Column(db.String(20))
-	
+	species_feedings = db.relationship('Feedings', backref='animal_feedings', lazy=True)
+
 	def __repr__(self):
 		return f"Animal('{self.species}', '{self.feeding_information}', '{self.residency_status}', '{self.animal_image}', '{self.extra_information}')"
 
@@ -60,31 +64,35 @@ class Classification(db.Model):
 #Storing feedings
 class Feedings(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	#user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	animal_id = db.Column(db.Integer, db.ForeignKey('animal.id'), nullable=False)
 	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	extra_info = db.Column(db.String(60))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 	def __repr__(self):
-		return f"Feedings('{self.user_id}', '{self.date_completed}', '{self.extra_info}')"
+		return f"Feedings('{self.date_completed}', '{self.extra_info}')"
 
 
 #Storing Cleanings
 class Cleanings(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	animal_id = db.Column(db.Integer, db.ForeignKey('animal.id'), nullable=False)
 	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	extra_info = db.Column(db.String(60))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 	def __repr__(self):
-		return f"Cleanings('{self.user_id}', '{self.date_completed}', '{self.extra_info}')"
+		return f"Cleanings('{self.date_completed}', '{self.extra_info}')"
 
 
 #Monitoring Information
 class Monitoring(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	animal_id = db.Column(db.Integer, db.ForeignKey('animal.id'), nullable=False)
 	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	extra_info = db.Column(db.String(60))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 	def __repr__(self):
-		return f"Monitoring('{self.user_id}', '{self.date_completed}', '{self.extra_info}')"
+		return f"Monitoring('{self.date_completed}', '{self.extra_info}')"
