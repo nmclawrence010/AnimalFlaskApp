@@ -11,7 +11,18 @@
         <button class="button button2">Add New Animal</button>
     </form>
   </div>
-  <div>
-
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="content-section">
+            <h3>Current Animals </h3>
+            {% for row in animal_grid %}
+            <div>
+              {% for cell in row %}
+                  <body>{{ cell }} </body>
+                {% endfor %}
+            </div>
+            {% endfor %}
   </div>
 {% endblock content %}

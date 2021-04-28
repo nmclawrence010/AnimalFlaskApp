@@ -36,12 +36,10 @@ class AddFeedingForm(FlaskForm):
 
 #Form for adding cleanings
 class AddCleaningForm(FlaskForm):
-	completed = BooleanField('Completed')
-	date_time = DateTimeField('Date & Time')
 	extra_information = StringField('Extra Information', validators=[DataRequired(), Length(max =150)])
+	submit = SubmitField('Submit')
 
 #Form for adding monitoring
 class AddMonitoringForm(FlaskForm):
-	completed = BooleanField('Completed')
-	date_time = DateTimeField('Date & Time')
 	extra_information = StringField('Extra Information', validators=[DataRequired(), Length(max =150)])
+	submit = SubmitField('Submit')

@@ -47,6 +47,8 @@ class Animal(db.Model):
 	animal_image = db.Column(db.String(20), default='defaultanimal.jpg')
 	animal_qr = db.Column(db.String(20))
 	species_feedings = db.relationship('Feedings', backref='animal_feedings', lazy=True)
+	species_cleanings = db.relationship('Cleanings', backref='animal_cleaning', lazy=True)
+	species_monitoring = db.relationship('Monitoring', backref='animal_monitoring', lazy=True)
 
 	def __repr__(self):
 		return f"Animal('{self.species}', '{self.feeding_information}', '{self.residency_status}', '{self.animal_image}', '{self.extra_information}')"
@@ -64,11 +66,10 @@ class Classification(db.Model):
 #Storing feedings
 class Feedings(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	#user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 	animal_id = db.Column(db.Integer, db.ForeignKey('animal.id'), nullable=False)
 	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	extra_info = db.Column(db.String(60))
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.username'), nullable=False)
 
 	def __repr__(self):
 		return f"Feedings('{self.date_completed}', '{self.extra_info}')"
@@ -80,7 +81,7 @@ class Cleanings(db.Model):
 	animal_id = db.Column(db.Integer, db.ForeignKey('animal.id'), nullable=False)
 	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	extra_info = db.Column(db.String(60))
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.username'), nullable=False)
 
 	def __repr__(self):
 		return f"Cleanings('{self.date_completed}', '{self.extra_info}')"
@@ -92,7 +93,7 @@ class Monitoring(db.Model):
 	animal_id = db.Column(db.Integer, db.ForeignKey('animal.id'), nullable=False)
 	date_completed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	extra_info = db.Column(db.String(60))
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.username'), nullable=False)
 
 	def __repr__(self):
 		return f"Monitoring('{self.date_completed}', '{self.extra_info}')"

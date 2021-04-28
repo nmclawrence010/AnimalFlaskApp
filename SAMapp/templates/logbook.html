@@ -44,59 +44,43 @@
 				<!-- Section for showing the recent cleanings -->
 				<table class="table">
 				  <thead class="thead-dark">
-				  	<h3>Cleaning <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.update_animal', this_species=animal.species) }}" style="float:right">Add</a></h3>
+				  	<h3>Cleaning <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.new_cleaning', this_species=animal.species) }}" style="float:right">Add</a></h3>
 				    <tr>
 				      <th scope="col">User Completed</th>
 				      <th scope="col">Date & Time Completed</th>
 				      <th scope="col">Extra Information</th>
 				    </tr>
 				  </thead>
-				  <tbody>
-				    <tr>
-				      <td>Niall</td>
-				      <td>16/03/2021 13:00</td>
-				      <td>AAA</td>
-				    </tr>
-				    <tr>
-				      <td>Thomas</td>
-				      <td>17/03/2021 13:00</td>
-				      <td>BBB</td>
-				    </tr>
-				    <tr>
-				      <td>Andrew</td>
-				      <td>18/03/2021 13:00</td>
-				      <td>CCC</td>
-				    </tr>
-				  </tbody>
+				  	<tbody>
+					  	{% for row in cleaning_data %}
+					    <tr>
+					    	{% for cell in row %}
+					      		<td>{{ cell }}</td>
+					      	{% endfor %}
+					    </tr>
+					    {% endfor %}
+				  	</tbody>
 				</table>
 
 				<!-- Section for showing the recent monitoring -->
 				<table class="table">
 				  <thead class="thead-dark">
-				  	<h3>Monitoring <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.update_animal', this_species=animal.species) }}" style="float:right">Add</a></h3>
+				  	<h3>Monitoring <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('main.new_monitoring', this_species=animal.species) }}" style="float:right">Add</a></h3>
 				    <tr>
 				      <th scope="col">User Completed</th>
 				      <th scope="col">Date & Time Completed</th>
 				      <th scope="col">Extra Information</th>
 				    </tr>
 				  </thead>
-				  <tbody>
-				    <tr>
-				      <td>Niall</td>
-				      <td>16/03/2021 13:00</td>
-				      <td>AAA</td>
-				    </tr>
-				    <tr>
-				      <td>Thomas</td>
-				      <td>17/03/2021 13:00</td>
-				      <td>BBB</td>
-				    </tr>
-				    <tr>
-				      <td>Andrew</td>
-				      <td>18/03/2021 13:00</td>
-				      <td>CCC</td>
-				    </tr>
-				  </tbody>
+				  	<tbody>
+				  	{% for row in monitoring_data %}
+					    <tr>
+					    	{% for cell in row %}
+					      		<td>{{ cell }}</td>
+					      	{% endfor %}
+					    </tr>
+				    {% endfor %}
+				  	</tbody>
 				</table>
 			</div>
 		</fieldset>

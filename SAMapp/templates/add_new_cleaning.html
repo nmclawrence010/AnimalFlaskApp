@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+	<form method="POST" action="">
+		{{ form .hidden_tag()}}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">{{ legend }}</legend>
+				<p class="article-content">You are about to add a new cleaning. The user and the date/time will be automatically assigned.</p>
+				<p class="article-content">Add any extra information if necessary and click submit.</p>
+			<div class="form-group">
+				{{ form.extra_information.label(class="form-control-label") }}
+
+				{% if form.extra_information.errors %}
+				{{ form.extra_information(class="form-control form-control-lg is-invalid") }}
+				<div class="invaild-feedback">
+					{% for error in form.extra_information.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+					{{ form.extra_information(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+		</fieldset>
+		<div class="form-group">
+			{{ form.submit(class="btn btn-outline-info") }}
+		</div>
+	</form>
+</div>
+{% endblock content %}
