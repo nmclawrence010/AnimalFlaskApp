@@ -25,7 +25,7 @@ class UpdateAnimalInfoForm(FlaskForm):
 	feeding_information = StringField('Feeding Information', validators=[DataRequired(), Length(max =200)])
 	residency_status = StringField('Residency Status', validators=[DataRequired(), Length(max =200)])
 	extra_information = TextAreaField('Extra Information')
-	animal_image = FileField('Update profile picture', validators=[FileAllowed(['jpg', 'png'])])
+	picture = FileField('Update profile picture', validators=[FileAllowed(['jpg', 'png'])])
 	submit = SubmitField('Update Animal')
 
 #Form for adding feedings

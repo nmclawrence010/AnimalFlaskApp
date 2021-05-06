@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Home</h1>
+  <h1>Home</h1>
   <div style="float:left;">
     <form action="/updateanimal">
         <button class="button button2" href="{{ url_for('main.home') }}">Update Animal</button>
@@ -15,14 +15,14 @@
   <br>
   <br>
   <br>
-  <div class="content-section">
-            <h3>Current Animals </h3>
-            {% for row in animal_grid %}
-            <div>
-              {% for cell in row %}
-                  <body>{{ cell }} </body>
-                {% endfor %}
-            </div>
-            {% endfor %}
+  <div>
+    <h2>Current Animals </h3>
+    {% for row in animal_grid %}
+      <div class="content-section-animal-grid" style="float:left;" >
+       <a href="{{ url_for('main.animal_profiles', this_species = row.species)}}">{{ row.species }}</a>
+
+       <img class="rounded-circle account-img" src="{{ row.animal_image }}">
+      </div>
+    {% endfor %}
   </div>
 {% endblock content %}

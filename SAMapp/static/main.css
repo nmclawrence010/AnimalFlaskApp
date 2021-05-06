@@ -36,6 +36,16 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 20px;
 }
 
+.content-section-animal-grid {
+  background: #ffffff;
+  padding: 10px 30px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  height: 150px;
+  width: 150px;
+}
+
 .article-title {
   color: #444444;
 }

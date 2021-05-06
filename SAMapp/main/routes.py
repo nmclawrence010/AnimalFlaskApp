@@ -8,6 +8,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from SAMapp.QRCode import qrgen
 from SAMapp.users.utils import save_picture_animal
 import mysql.connector
+from base64 import b64encode
 
 main = Blueprint('main', __name__)
 
@@ -15,7 +16,9 @@ main = Blueprint('main', __name__)
 @main.route("/home")
 def home():
 	animal_grid = db.engine.execute("SELECT species, animal_image FROM Animal")
-	return render_template("home.html", animal_grid=animal_grid)
+	#image = b64encode(Animal.animal_image).decode("utf-8")
+	#animal_image = url_for('static', filename='profile_pics/' + animal_grid.animal_image)
+	return render_template('home.html', animal_grid=animal_grid)
 
 
 @main.route("/logbook")
@@ -55,18 +58,20 @@ def animal_profiles(this_species):
 	feeding_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info FROM feedings ORDER BY date_completed DESC LIMIT 5;")
 	cleaning_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info FROM cleanings ORDER BY date_completed DESC LIMIT 5;")
 	monitoring_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info FROM monitoring ORDER BY date_completed DESC LIMIT 5;")
-	#feeding_data = db.engine.execute("SELECT User.username, date_completed, extra_info FROM feedings, User")
 	animal_image = url_for('static', filename='animal_pics/' + animal_profiles.animal_image)
 	return render_template('logbook.html', animal=animal_profiles, feeding_data = feeding_data, cleaning_data=cleaning_data, monitoring_data=monitoring_data, animal_image=animal_image)
 
 
 @main.route("/logbook/<string:this_species>/update", methods=['GET', 'POST'])
 def update_animal(this_species):
+	print ("memes")
 	animal = Animal.query.filter_by(species=this_species).first_or_404()
 	form = UpdateAnimalInfoForm()
 	if form.validate_on_submit():
-		if form.animal_image.data:
-			picture_file = save_picture_animal(form.animal_image.data)
+		print (form.data)
+		if form.picture.data:
+			print()
+			picture_file = save_picture_animal(form.picture.data)
 			animal.animal_image = picture_file
 		animal.species = form.species.data
 		animal.feeding_information = form.feeding_information.data
@@ -74,6 +79,7 @@ def update_animal(this_species):
 		animal.extra_information = form.extra_information.data
 		db.session.commit()
 		flash('Animal has been updated!', 'success')
+		print ("2222222222222222222222222")
 		return redirect(url_for('main.animal_profiles', this_species=animal.species))
 	elif request.method == 'GET':
 		form.species.data = animal.species
@@ -81,6 +87,7 @@ def update_animal(this_species):
 		form.residency_status.data = animal.residency_status
 		form.extra_information.data = animal.extra_information
 	animal_image = url_for('static', filename='animal_pics/' + animal.animal_image)
+	print ("33333333333333333333333333333333")
 	return render_template('update_animal.html', form=form, animal_image = animal_image, legend='Update existing animal')
 
 

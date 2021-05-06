@@ -30,5 +30,4 @@ def save_picture_animal(animal_picture):
 	i = Image.open(animal_picture)
 	i.thumbnail(output_size)		
 	i.save(picture_path)
-
 	return picture_fn
