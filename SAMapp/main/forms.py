@@ -43,3 +43,18 @@ class AddCleaningForm(FlaskForm):
 class AddMonitoringForm(FlaskForm):
 	extra_information = StringField('Extra Information', validators=[DataRequired(), Length(max =150)])
 	submit = SubmitField('Submit')
+
+class RequestResetForm(FlaskForm):
+	email = StringField('Email', validators=[DataRequired(), Email()])
+	submit = SubmitField('Request Password Reset')
+
+	#Makes sure we cant have repeat emails
+	def validate_email(self, email):
+		user = User.query.filter_by(email=email.data).first()
+		if user is None:
+			raise ValidationError('There is no account with that email, You must register first')
+
+class ResetPasswordForm(FlaskForm):
+	password = PasswordField('Password', validators=[DataRequired()])
+	confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+	submit = SubmitField('Reset Password')

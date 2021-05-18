@@ -1,4 +1,5 @@
 from datetime import datetime
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import url_for, current_app
 from SAMapp import db, login_manager
 from flask_login import UserMixin 
@@ -21,6 +22,19 @@ class User(db.Model, UserMixin):
 	cleanings_completed = db.relationship('Cleanings', backref='user2_completed', lazy=True)
 	monitoring_completed = db.relationship('Monitoring', backref='user3_completed', lazy=True)
 
+	def get_reset_token(self, expires_sec=1800):
+		s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
+		return s.dumps({'user_id': self.id}).decode('utf-8')
+
+	@staticmethod
+	def verify_reset_token(token):
+		s = Serializer(current_app.config['SECRET_KEY'])
+		try:
+			user_id = s.loads(token)['user_id']
+		except:
+			return None
+		return User.query.get(user_id)
+
 	def __repr__(self):
 		return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
@@ -40,7 +54,7 @@ class Post(db.Model):
 #Model for the animals
 class Animal(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	species = db.Column(db.String(75), nullable=False)
+	species = db.Column(db.String(75), unique=True, nullable=False)
 	feeding_information = db.Column(db.String(200), nullable=False)
 	residency_status = db.Column(db.String(200), nullable=False)
 	extra_information = db.Column(db.String(200))

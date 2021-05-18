@@ -1,14 +1,15 @@
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flask import * 
-from SAMapp import db, bcrypt
+from SAMapp import db, bcrypt, mail
 from SAMapp.models import User, Post, Animal, Feedings, Cleanings, Monitoring
-from SAMapp.main.forms import AddAnimalForm, UpdateAnimalInfoForm, AddFeedingForm, AddCleaningForm, AddMonitoringForm
+from SAMapp.main.forms import AddAnimalForm, UpdateAnimalInfoForm, AddFeedingForm, AddCleaningForm, AddMonitoringForm, RequestResetForm, ResetPasswordForm
 from flask_login import login_user, current_user, logout_user, login_required
 from SAMapp.QRCode import qrgen
-from SAMapp.users.utils import save_picture_animal
+from SAMapp.users.utils import save_picture_animal, send_reset_email
 import mysql.connector
 from base64 import b64encode
+from flask_mail import Message
 
 main = Blueprint('main', __name__)
 
@@ -16,8 +17,6 @@ main = Blueprint('main', __name__)
 @main.route("/home")
 def home():
 	animal_grid = db.engine.execute("SELECT species, animal_image FROM Animal")
-	#image = b64encode(Animal.animal_image).decode("utf-8")
-	#animal_image = url_for('static', filename='profile_pics/' + animal_grid.animal_image)
 	return render_template('home.html', animal_grid=animal_grid)
 
 
@@ -38,7 +37,13 @@ def about():
 	return render_template("about.html")
 
 
+@main.route("/qrpage")
+def qrpage():
+	return render_template("qrpage.html")
+
+
 @main.route('/animal/new', methods=['GET', 'POST'])
+@login_required
 def addnewanimal():
 	form = AddAnimalForm()
 	if form.validate_on_submit():
@@ -55,14 +60,15 @@ def addnewanimal():
 @main.route("/logbook/<string:this_species>")
 def animal_profiles(this_species):
 	animal_profiles = Animal.query.filter_by(species=this_species).first_or_404()
-	feeding_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info FROM feedings ORDER BY date_completed DESC LIMIT 5;")
-	cleaning_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info FROM cleanings ORDER BY date_completed DESC LIMIT 5;")
-	monitoring_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info FROM monitoring ORDER BY date_completed DESC LIMIT 5;")
+	feeding_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info, animal_id FROM feedings ORDER BY date_completed DESC LIMIT 5;")
+	cleaning_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info, animal_id FROM cleanings ORDER BY date_completed DESC LIMIT 5;")
+	monitoring_data = db.engine.execute("SELECT user_id, DATETIME(date_completed), extra_info, animal_id FROM monitoring ORDER BY date_completed DESC LIMIT 5;")
 	animal_image = url_for('static', filename='animal_pics/' + animal_profiles.animal_image)
 	return render_template('logbook.html', animal=animal_profiles, feeding_data = feeding_data, cleaning_data=cleaning_data, monitoring_data=monitoring_data, animal_image=animal_image)
 
 
 @main.route("/logbook/<string:this_species>/update", methods=['GET', 'POST'])
+@login_required
 def update_animal(this_species):
 	print ("memes")
 	animal = Animal.query.filter_by(species=this_species).first_or_404()
@@ -79,7 +85,6 @@ def update_animal(this_species):
 		animal.extra_information = form.extra_information.data
 		db.session.commit()
 		flash('Animal has been updated!', 'success')
-		print ("2222222222222222222222222")
 		return redirect(url_for('main.animal_profiles', this_species=animal.species))
 	elif request.method == 'GET':
 		form.species.data = animal.species
@@ -87,7 +92,6 @@ def update_animal(this_species):
 		form.residency_status.data = animal.residency_status
 		form.extra_information.data = animal.extra_information
 	animal_image = url_for('static', filename='animal_pics/' + animal.animal_image)
-	print ("33333333333333333333333333333333")
 	return render_template('update_animal.html', form=form, animal_image = animal_image, legend='Update existing animal')
 
 
@@ -157,3 +161,34 @@ def download():
     qrgen(text)
     filename = text+'.png'
     return send_file('static/qr_codes/' + filename,as_attachment=True)
+
+
+@main.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+		if current_user.is_authenticated:
+			return redirect(url_for('main.home'))
+		form = RequestResetForm()
+		if form.validate_on_submit():
+			user = User.query.filter_by(email=form.email.data).first()
+			send_reset_email(user)
+			flash('An email has been sent with instructions to reset your password', 'info')
+			return redirect(url_for('users.login'))
+		return render_template('reset_request.html', title='Reset Password', form=form)
+
+
+@main.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token	(token):
+		if current_user.is_authenticated:
+			return redirect(url_for('main.home'))
+		user = User.verify_reset_token(token)
+		if user is None:
+			flash('That is an invalid or expired token', 'warning')
+			return redirect(url_for('main.reset_request'))
+		form = ResetPasswordForm()
+		if form.validate_on_submit():
+			hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+			user.password = hashed_password
+			db.session.commit()
+			flash('Your password has beeen updated', 'success')
+			return redirect(url_for('users.login'))
+		return render_template('reset_token.html', title='Reset Password', form=form)

@@ -2,6 +2,8 @@ import os
 import secrets
 from PIL import Image
 from flask import url_for, current_app
+from flask_mail import Message
+from SAMapp import mail
 
 #Saving the profile pic
 def save_picture(form_picture):
@@ -31,3 +33,13 @@ def save_picture_animal(animal_picture):
 	i.thumbnail(output_size)		
 	i.save(picture_path)
 	return picture_fn
+
+def send_reset_email(user):
+	token = user.get_reset_token()
+	msg = Message('Password Reset Request', sender='noreply@animalmanagement.com', recipients=[user.email])
+	msg.body = f'''To reset your password, click the following link:
+{url_for('main.reset_token', token=token, _external=True) }
+
+If you did not make this request then simply ignore it and no changes will be made
+'''
+	mail.send(msg)

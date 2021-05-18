@@ -18,10 +18,9 @@
   <div>
     <h2>Current Animals </h3>
     {% for row in animal_grid %}
-      <div class="content-section-animal-grid" style="float:left;" >
+      <div class="content-section-animal-grid" style="float:left; margin-right:5px; text-align:center; " >
        <a href="{{ url_for('main.animal_profiles', this_species = row.species)}}">{{ row.species }}</a>
-
-       <img class="rounded-circle account-img" src="{{ row.animal_image }}">
+       <img class="rounded-circle account-img" src="{{url_for('static', filename='animal_pics/' + row.animal_image)}}"></img>
       </div>
     {% endfor %}
   </div>

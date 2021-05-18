@@ -32,11 +32,15 @@
 				  </thead>
 				  <tbody>
 				  	{% for row in feeding_data %}
-						<tr>
-						    {% for cell in row %}
-						      	<td>{{ cell }}</td>
-						    {% endfor %}
-						</tr>
+							<tr>
+								{% if row.animal_id == animal.id %}
+									{% for cell in row %}
+										{% if cell != row.animal_id %}
+									    	<td>{{ cell }}</td>
+									    {% endif %}
+									{% endfor %}
+								{% endif %}
+							</tr>
 				    {% endfor %}
 				  </tbody>
 				</table>
@@ -54,9 +58,13 @@
 				  	<tbody>
 					  	{% for row in cleaning_data %}
 					    <tr>
-					    	{% for cell in row %}
-					      		<td>{{ cell }}</td>
-					      	{% endfor %}
+					    	{% if row.animal_id == animal.id %}
+						    	{% for cell in row %}
+						      		{% if cell != row.animal_id %}
+									    <td>{{ cell }}</td>
+									{% endif %}
+						      	{% endfor %}
+						    {% endif %}
 					    </tr>
 					    {% endfor %}
 				  	</tbody>
@@ -75,9 +83,13 @@
 				  	<tbody>
 				  	{% for row in monitoring_data %}
 					    <tr>
-					    	{% for cell in row %}
-					      		<td>{{ cell }}</td>
-					      	{% endfor %}
+					    	{% if row.animal_id == animal.id %}
+						    	{% for cell in row %}
+						      		{% if cell != row.animal_id %}
+									    <td>{{ cell }}</td>
+									{% endif %}
+						      	{% endfor %}
+						    {% endif %}
 					    </tr>
 				    {% endfor %}
 				  	</tbody>
