@@ -36,7 +36,7 @@ def save_picture_animal(animal_picture):
 
 def send_reset_email(user):
 	token = user.get_reset_token()
-	msg = Message('Password Reset Request', sender='noreply@animalmanagement.com', recipients=[user.email])
+	msg = Message('Password Reset Request', sender='sercanimalmanagement@gmail.com', recipients=[user.email])
 	msg.body = f'''To reset your password, click the following link:
 {url_for('main.reset_token', token=token, _external=True) }
 

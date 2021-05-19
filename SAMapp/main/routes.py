@@ -7,7 +7,6 @@ from SAMapp.main.forms import AddAnimalForm, UpdateAnimalInfoForm, AddFeedingFor
 from flask_login import login_user, current_user, logout_user, login_required
 from SAMapp.QRCode import qrgen
 from SAMapp.users.utils import save_picture_animal, send_reset_email
-import mysql.connector
 from base64 import b64encode
 from flask_mail import Message
 
@@ -148,6 +147,7 @@ def delete_animal(this_species):
 	return redirect(url_for('main.home'))
 
 
+#QR Generator stuff that wasnt used in the end
 @main.route('/converted', methods = ['POST'])
 def convert():
 	global text
